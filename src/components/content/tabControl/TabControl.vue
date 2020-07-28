@@ -14,6 +14,7 @@
     props: {
       titles: {
         type: Array,
+        //当对象类型是数组或对象是default必须是一个函数
         default() {
           return []
         }

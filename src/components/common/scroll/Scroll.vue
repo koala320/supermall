@@ -17,11 +17,15 @@
     props: {
       probeType: {
         type: Number,
-        default: 0
+        default() {
+          return 0;
+        }
       },
       pullUpLoad: {
         type: Boolean,
-        default: false
+        default() {
+          return false;
+        }
       }
     },
     data() {
@@ -45,19 +49,31 @@
         //在子组件中自定义一个事件把position发出去
         this.$emit('scroll',position)
       }))
-      //3、监听上拉事件
-      this.scroll.on('pullingUp',() => {
-        this.$emit('pullingUp')
-      })
+      //3、监听scroll滚动到底部
+      if (this.pullUpLoad) {
+        this.scroll.on('pullingUp',() => {
+          // console.log('监听滚动到底部');
+          //子组件往父组件回调
+          this.$emit('pullingUp')
+        })
+      }
     },
     methods: {
       //封装ScrollTo方法
       scrollTo(x,y,time=300) {
-        this.scroll.scrollTo(x,y,time)
+        this.scroll && this.scroll.scrollTo(x,y,time)
       },
-      //上拉加载更多，请求多次数据
+      //上拉加载更多，请求多次数据,利用&&多做一层判断，当this.scroll有值时，继续下一步表达式
       finishPullUp(){
-        this.scroll.finishPullUp()
+        this.scroll && this.scroll.finishPullUp()
+      },
+      refresh() {
+        this.scroll && this.scroll.refresh()
+      },
+      //记录当前滚动的y值
+      getScrollY() {
+        //这里多做一层判断，当this.scroll.y有值的情况下取出，没有值的时候为0
+        return this.scroll ? this.scroll.y : 0
       }
     }
   }

@@ -5,8 +5,7 @@ export function getHomeMultidata() {
     url: '/home/multidata'
   })
 }
-//获取首页TabControl的商品数据
-//需要传两个参数（类型type：pop/new/sell和页码page）
+//获取首页TabControl的商品数据：需要传两个参数（类型type：pop/new/sell；页码page）
 export function getHomeGoods(type,page) {
   return request({
     url: 'home/data',

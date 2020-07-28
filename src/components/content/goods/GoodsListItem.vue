@@ -1,6 +1,6 @@
 <template>
-  <div class="goods-item">
-        <img :src="goodsItem.show.img" alt="">
+  <div class="goods-item" @click="itemClick">
+        <img :src="showImage" alt="" @load="imageLoad">
         <div class="goods-info">
           <p class="title">{{goodsItem.title}}</p>
           <span class="price">¥{{goodsItem.price}}</span>
@@ -20,13 +20,35 @@
           return {}
         }
       }
+    },
+    computed: {
+      //当图片存放的数据结构存在不同时，为了组件可以复用，需要加一个判断：表达式1||表达式2
+      //当表达式1为空时，执行表达式2
+      showImage() {
+        return this.goodsItem.image || this.goodsItem.show.img
+      }
+    },
+    methods: {
+      imageLoad(){
+        //因为组件的复用，需要通过路由判断当前是哪个页面，需要监听图片之后刷新
+        if (this.$route.path.indexOf('/home')) {
+          this.$bus.$emit('homeItemImageLoad')
+        }else if (this.$route.path.indexOf('/detail')) {
+          this.$bus.$emit('detailItemImageLoad')
+        }
+      },
+      itemClick() {
+        this.$router.push('/detail/' + this.goodsItem.iid)
+      }
     }
+
   }
 </script>
 
 <style scoped>
   .goods-item {
     width: 48%;
+    background-color: #fff;
   }
   ul li{
     display:inline
